@@ -15,14 +15,106 @@
 </div>
 
 <div class="container content">
-  <div class="col-md-8 col-md-offset-2">
-    <div class="btn-group" role="group" aria-label="...">
-      <a class="btn btn-warning" href="/posts/<%= @post.id %>/edit"><i class="fa fa-pencil-square-o"></i> Edit</a>
-      <a class="btn btn-danger" href="/destroy_post/<%= @post.id %>"><i class="fa fa-trash-o"></i> Destroy</a>
+  <% if current_user.id == @post.user_id %>
+    <div class="col-md-8 col-md-offset-2">
+      <div class="btn-group" role="group" aria-label="...">
+        <a class="btn btn-warning" href="/posts/<%= @post.id %>/edit"><i class="fa fa-pencil-square-o"></i> Edit</a>
+        <a class="btn btn-danger" href="/destroy_post/<%= @post.id %>"><i class="fa fa-trash-o"></i> Destroy</a>
+      </div>
     </div>
-  </div>
+  <% end %>
   <div class="col-md-8 col-md-offset-2">
     <h3>by <%= @post.user.full_name %></h3>
     <p><%= @post.contents %></p>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <% if @response.errors.any? %>
+        <% @response.errors.full_messages.each do |message| %>
+          <div class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <%= message %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <!-- Responsive panel example -->
+
+      <div class="row">
+        <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+          <% if user_signed_in? %>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Add Response</h3>
+              </div>
+              <div class="panel-body">
+                <%= form_tag responses_url, :method => "post", :class => "form-horizontal" do %>
+                  <!-- Label and input for post_id -->
+                  <div class="form-group">
+                    <div class="col-sm-10">
+                      <input type="hidden" id="post_id" name="post_id" placeholder="Post" class="form-control" value="<%= @post.id %>">
+                    </div>
+                  </div>
+
+                  <!-- Label and input for user_id -->
+                  <div class="form-group">
+                    <div class="col-sm-10">
+                      <input type="hidden" id="user_id" name="user_id" placeholder="User" class="form-control" value="<%= current_user.id %>">
+                    </div>
+                  </div>
+
+                  <!-- Label and input for contents -->
+                  <div class="form-group">
+                    <label for="contents" class="col-sm-2 control-label">
+                      Contents
+                    </label>
+                    <div class="col-sm-10">
+                      <input type="text" id="contents" name="contents" placeholder="Contents" class="form-control" value="<%= @response.contents %>">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <input type="submit" value="Create Response" class="btn btn-success">
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+
+          <% end %>
+          <ul class="list-group">
+            <% @post.responses.each do |response| %>
+              <li class="list-group-item">
+                <div class="media">
+                  <div class="media-body">
+                    <h4 class="media-heading">
+                      <%= link_to(response.user.full_name, user_url(response.user.id)) %>
+                      <small>updated <%= time_ago_in_words(response.updated_at) %> ago</small>
+                    </h4>
+                    <%= response.contents %>
+                  </div>
+                  <% if current_user.id == response.user_id %>
+                    <div class="btn-group">
+                      <%= link_to edit_response_url, class: 'btn btn-warning' do  %>
+                        <i class="fa fa-pencil-square-o"></i> Edit
+                      <% end %>
+                      <%= link_to response_url, class: 'btn btn-danger', method: :delete do  %>
+                        <i class="fa fa-trash"></i> Destroy
+                      <% end %>
+                    </div>
+
+                  <% end %>
+                </div>
+
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>

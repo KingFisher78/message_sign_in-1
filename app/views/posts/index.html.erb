@@ -5,11 +5,14 @@
         <img class="img-responsive" src="<%= post.image_url %>" alt="">
         <h3><a href="/posts/<%= post.id %>"><%= post.title %></a></h3>
         <h4><%= truncate(post.contents, length: 100) %></h4>
-        <div class="btn-group" role="group" aria-label="...">
-          <a class="btn btn-primary" href="/posts/<%= post.id %>"><i class="fa fa-search-plus"></i> Show</a>
-          <a class="btn btn-warning" href="/posts/<%= post.id %>/edit"><i class="fa fa-pencil-square-o"></i> Edit</a>
-          <a class="btn btn-danger" href="/destroy_post/<%= post.id %>"><i class="fa fa-trash-o"></i> Destroy</a>
-        </div>
+        <% if current_user.id == post.user_id %>
+          <div class="btn-group" role="group" aria-label="...">
+            <a class="btn btn-primary" href="/posts/<%= post.id %>"><i class="fa fa-search-plus"></i> Show</a>
+            <a class="btn btn-warning" href="/posts/<%= post.id %>/edit"><i class="fa fa-pencil-square-o"></i> Edit</a>
+            <a class="btn btn-danger" href="/destroy_post/<%= post.id %>"><i class="fa fa-trash-o"></i> Destroy</a>
+          </div>
+
+        <% end %>
       </article>
     </div>
   <% end %>

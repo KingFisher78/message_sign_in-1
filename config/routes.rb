@@ -1,5 +1,22 @@
 Rails.application.routes.draw do
 
+  # Routes for the Response resource:
+  # CREATE
+  get '/responses/new',      :controller => 'responses', :action => 'new',    :as => 'new_response'
+  post '/responses',         :controller => 'responses', :action => 'create', :as => 'responses'
+
+  # READ
+  get '/responses',          :controller => 'responses', :action => 'index'
+  get '/responses/:id',      :controller => 'responses', :action => 'show',   :as => 'response'
+
+  # UPDATE
+  get '/responses/:id/edit', :controller => 'responses', :action => 'edit',   :as => 'edit_response'
+  patch '/responses/:id',    :controller => 'responses', :action => 'update'
+
+  # DELETE
+  delete '/responses/:id',   :controller => 'responses', :action => 'destroy'
+  #------------------------------
+
   devise_for :users
   root to: "posts#index"
   # Routes for the User resource:

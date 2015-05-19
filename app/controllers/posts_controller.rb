@@ -1,6 +1,7 @@
 class PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
+    @response = Response.new
   end
 
   def new
@@ -38,7 +39,7 @@ class PostsController < ApplicationController
     @post = Post.find(params[:id])
     @post.destroy
 
-    redirect_to "/posts/new"
+    redirect_to posts_url, notice: "Post successfully destroyed"
   end
 
   def index
